@@ -1,0 +1,63 @@
+<%- model_class = Post -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => @category %></h3>
+</div>
+<div align="right">Total Article : <%= @total_count %></div>
+<table class="table table-striped table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>작성일</th>
+      <th>조회수</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+		<% 
+			i = 0
+			if @page == 0 || @page == nil
+				p = 1
+			else
+				p = @page
+			end
+			@posts.each do |post| 
+				no = @total_count - ((p.to_i - 1) * @offset) - i 
+				i += 1
+		%>
+      <tr>
+				<td><%= no %></td>
+				<td>
+					<%= link_to post.title, post_path(post, :page => @page) %>
+					<% if post.comments.exists? %>
+						<small>(<%= post.comments.count %>)</small>
+					<% end %>
+				</td>
+        <td><%= post.user.email.split('@')[0] %></td>
+				<td><%= post.created_at.strftime('%Y.%m.%d') %></td>
+				<td><%= post.impressionist_count(:filter=>:session_hash) %></td>
+				<td>
+				<% if user_signed_in? && post.user.id == current_user.id %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_post_path(post, :page => @page, :category => @category), :class => 'btn btn-warning btn-mini' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      post_path(post, :page => @page, :category => @category),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+											:class => 'btn btn-mini btn-danger' %>
+				<% else %>
+					<%= image_tag("/assets/images/ahsan/photo.jpg", :size => "16x16") %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<%= image_tag("/assets/images/ahsan/photo.jpg", :size => "16x16") %>
+				<% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @posts, :theme => 'twitter-bootstrap' %>
+
+<%= link_to t('.new', :default => t("helpers.links.new")), new_post_path(:category => @category),
+            :class => 'btn btn-primary' %>
+<%= link_to 'Home', root_path, :class => 'btn btn-inverse' %>

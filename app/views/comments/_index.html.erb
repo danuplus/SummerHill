@@ -1,0 +1,17 @@
+<table class='table'>
+  <tbody>
+    <% comments.each do |comment| %>
+      <tr>
+        <td><%= comment.user.email.split('@')[0] %></td>
+        <td><%= simple_format comment.desc %></td>
+				<td class="pull-right">
+					<%= link_to '삭제', [comment.post, comment],
+               :confirm => 'Are you sure?', :class => "btn btn-mini btn-danger",
+               :method => :delete %>
+				</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

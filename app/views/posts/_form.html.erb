@@ -1,0 +1,20 @@
+<%= simple_form_for @post, :html => { :class => 'form-horizontal' } do |f| %>	
+	<% if params[:category] == 'Result' %>
+		<%= f.association :post_category, :prompt => "Category를 선택해 주세요." %>
+	<% else %>
+		<div class="control-group">
+			<div class="controls">
+				<h5 class="string"><%= @category.name %></h5>
+			</div>
+		</div>
+		<%= f.input :post_category_id, :input_html => { :value => @category.id}, :as => :hidden %>
+	<% end %>
+	<%= f.input :user_id, :input_html => { :value => current_user.id}, :as => :hidden %>
+	<%= f.input :title, :input_html => { :placeholder => "제목을 적어 주세요", :class=> 'span12'} %>
+	<%= f.input :desc, :input_html => { :placeholder => "내용을 적어 주세요", :class=> 'span12 summernote'} %>
+  <div class="form-actions">
+    <%= f.button :submit, :class => 'btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                posts_path, :class => 'btn' %>
+  </div>
+<% end %>

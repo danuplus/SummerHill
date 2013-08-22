@@ -1,0 +1,23 @@
+<%= simple_form_for(comment, :url => post_comments_path(@post)) do |f| %>
+  <% if comment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(comment.errors.count, "error") %> prohibited this comment from being saved:</h2>
+
+      <ul>
+        <% comment.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= f.input :user_id, :as => :hidden, :input_html => { :value => current_user.id } %>
+  <%= f.input :post_id, :as => :hidden, :input_html => { :value => @post.id } %>
+
+  <div class="form-inputs">
+    <%= f.input :desc, :input_html => { :placeholder => "댓글 쓰세요.", :class => 'span12'}, :label => false %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Comment", :class => "btn btn-primary" %>
+  </div>
+<% end %>
